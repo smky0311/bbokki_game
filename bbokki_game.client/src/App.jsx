@@ -179,8 +179,9 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100 flex flex-col items-center py-4 px-2 sm:py-8 sm:px-4 font-sans select-none">
-            <div className="w-full max-w-[95vw] xl:max-w-7xl flex justify-between items-center mb-4 sm:mb-8 bg-white p-3 sm:p-4 rounded-xl shadow-sm">
+        <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-amber-50 flex flex-col py-4 px-3 sm:py-6 sm:px-6 lg:px-8 font-sans select-none">
+            {/* 헤더 */}
+            <div className="w-full flex justify-between items-center mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-100">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
                         <IconSparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" /> 대박 기원 뽑기판
@@ -197,31 +198,33 @@ const App = () => {
                 </div>
             </div>
 
-            <div className="w-full max-w-[95vw] xl:max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
-                {/* 왼쪽: 뽑기판 */}
-                <div className="lg:col-span-2">
-                    <div className="bg-yellow-800 p-3 sm:p-4 rounded-xl shadow-xl relative">
+            {/* 메인 컨텐츠 - 전체 너비 사용 */}
+            <div className="w-full flex-1 grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
+                {/* 왼쪽: 뽑기판 - 넓은 화면에서 3칸 차지 */}
+                <div className="xl:col-span-3">
+                    <div className="bg-gradient-to-br from-yellow-700 to-yellow-900 p-3 sm:p-5 rounded-xl shadow-xl relative h-full">
                         <div className="absolute inset-0 bg-yellow-900 opacity-10 rounded-xl pointer-events-none"></div>
-                        <div className="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-10 gap-1 sm:gap-2 relative z-10">
+                        {/* 그리드 컬럼 수를 화면 크기에 따라 더 세밀하게 조정 */}
+                        <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-12 2xl:grid-cols-15 gap-1.5 sm:gap-2 relative z-10">
                             {board.map((slot, index) => (
                                 <button
                                     key={slot.id}
                                     onClick={() => handleSlotClick(index)}
                                     disabled={slot.isOpen}
                                     className={`
-                    aspect-square relative rounded shadow-sm flex items-center justify-center text-[10px] sm:text-xs font-bold transition-all duration-300
+                    aspect-square relative rounded-lg shadow-md flex items-center justify-center text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300
                     ${slot.isOpen
                                             ? 'bg-white border-2 border-slate-200 cursor-default'
-                                            : 'bg-yellow-200 hover:bg-yellow-100 border-b-4 border-r-4 border-yellow-400 hover:scale-105 active:scale-95 cursor-pointer text-yellow-800'
+                                            : 'bg-gradient-to-br from-yellow-200 to-yellow-300 hover:from-yellow-100 hover:to-yellow-200 border-b-4 border-r-4 border-yellow-500 hover:scale-105 active:scale-95 cursor-pointer text-yellow-800 shadow-lg'
                                         }
                   `}
                                 >
                                     {slot.isOpen ? (
-                                        <span className={`text-center leading-tight ${slot.prizeData?.rank === 5 ? 'text-slate-400' : 'text-red-500'}`}>
+                                        <span className={`text-center leading-tight ${slot.prizeData?.rank === 5 ? 'text-slate-400' : 'text-red-500 font-extrabold'}`}>
                                             {slot.prizeData?.rank === 5 ? '꽝' : `${slot.prizeData?.rank}등`}
                                         </span>
                                     ) : (
-                                        <span className="opacity-50">{slot.number}</span>
+                                        <span className="opacity-60">{slot.number}</span>
                                     )}
                                 </button>
                             ))}
@@ -229,16 +232,20 @@ const App = () => {
                     </div>
                 </div>
 
-                {/* 오른쪽: 현황 */}
-                <div className="flex flex-col gap-4">
+                {/* 오른쪽: 현황 패널 */}
+                <div className="xl:col-span-1 flex flex-col gap-4">
+                    {/* 남은 상품 현황 */}
                     <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100">
-                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2">남은 상품 현황</h2>
+                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2 flex items-center gap-2">
+                            <IconGift className="w-4 h-4 text-amber-500" />
+                            남은 상품 현황
+                        </h2>
                         <ul className="space-y-3">
                             {prizes.map((prize) => (
                                 <li key={prize.id} className="flex justify-between items-center text-xs sm:text-sm">
                                     <div className="flex items-center gap-2">
                                         <span className={`font-bold w-8 ${prize.color}`}>{prize.rank === 5 ? '꽝' : `${prize.rank}등`}</span>
-                                        <span className="text-slate-600 truncate max-w-[120px] sm:max-w-[150px]">{prize.name}</span>
+                                        <span className="text-slate-600 truncate max-w-[100px] sm:max-w-[140px] lg:max-w-[180px]">{prize.name}</span>
                                     </div>
                                     <span className={`font-mono font-medium px-2 py-0.5 rounded text-xs ${prize.current === 0 ? 'bg-red-100 text-red-500' : 'bg-slate-100 text-slate-600'}`}>
                                         {prize.rank === 5 ? '∞' : `${prize.current}개`}
@@ -248,26 +255,59 @@ const App = () => {
                         </ul>
                     </div>
 
-                    <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100 flex-1">
-                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2">나의 당첨 기록</h2>
-                        <div className="h-48 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                    {/* 나의 당첨 기록 */}
+                    <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100 flex-1 min-h-[200px]">
+                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2 flex items-center gap-2">
+                            <IconTrophy className="w-4 h-4 text-amber-500" />
+                            나의 당첨 기록
+                        </h2>
+                        <div className="h-48 xl:h-auto xl:max-h-[400px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                             {history.length === 0 ? (
                                 <p className="text-slate-400 text-center text-xs sm:text-sm py-4">기록이 없습니다.</p>
                             ) : (
                                 history.map((record, idx) => (
-                                    <div key={idx} className="flex justify-between items-center text-xs sm:text-sm p-2 bg-slate-50 rounded">
+                                    <div key={idx} className="flex justify-between items-center text-xs sm:text-sm p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
                                         <span className={record.rank <= 3 ? "font-bold text-red-500" : "text-slate-500"}>
                                             {record.rank === 5 ? '꽝' : `${record.rank}등`}
                                         </span>
-                                        <span className="text-xs text-slate-400 truncate max-w-[150px]">{record.name}</span>
+                                        <span className="text-xs text-slate-400 truncate max-w-[120px] sm:max-w-[150px]">{record.name}</span>
                                     </div>
                                 ))
                             )}
                         </div>
                     </div>
+
+                    {/* 통계 카드 추가 - 여백 활용 */}
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-4 sm:p-5 rounded-xl shadow-sm border border-amber-100">
+                        <h2 className="font-bold text-base sm:text-lg mb-3 text-slate-800 flex items-center gap-2">
+                            <IconStar className="w-4 h-4 text-amber-500" />
+                            진행 현황
+                        </h2>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="bg-white/70 rounded-lg p-3 text-center">
+                                <div className="text-2xl font-bold text-amber-600">
+                                    {board.filter(s => s.isOpen).length}
+                                </div>
+                                <div className="text-xs text-slate-500">뽑은 횟수</div>
+                            </div>
+                            <div className="bg-white/70 rounded-lg p-3 text-center">
+                                <div className="text-2xl font-bold text-green-600">
+                                    {board.filter(s => !s.isOpen).length}
+                                </div>
+                                <div className="text-xs text-slate-500">남은 칸</div>
+                            </div>
+                            <div className="bg-white/70 rounded-lg p-3 text-center col-span-2">
+                                <div className="text-2xl font-bold text-red-500">
+                                    {history.filter(h => h.rank <= 4).length}
+                                </div>
+                                <div className="text-xs text-slate-500">당첨 횟수 (꽝 제외)</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            {/* 당첨 결과 모달 */}
             {isModalOpen && selectedPrize && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsModalOpen(false)}>
                     <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center transform scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
@@ -348,6 +388,29 @@ const App = () => {
                     </div>
                 </div>
             )}
+
+            {/* Tailwind 15열 그리드 커스텀 스타일 */}
+            <style>{`
+        @media (min-width: 1536px) {
+          .grid-cols-15 {
+            grid-template-columns: repeat(15, minmax(0, 1fr));
+          }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      `}</style>
         </div>
     );
 };
