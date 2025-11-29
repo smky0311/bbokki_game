@@ -1,16 +1,17 @@
-﻿
-
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
-    font-family: 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif !important;
+/* Prefer the web font you loaded in index.html, then sensible fallbacks */
+:root {
+  --app-font: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+* {
+  font-family: var(--app-font);
+}
 
 /* 아래는 기존 CSS가 있다면 유지 */
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
