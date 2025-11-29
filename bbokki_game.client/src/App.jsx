@@ -184,9 +184,9 @@ const App = () => {
             <div className="w-full flex justify-between items-center mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-100">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
-                        <IconSparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" /> 대박 기원 뽑기판
+                        <IconSparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" /> 주님앞에 제일교회 달란트시장 뽑기판
                     </h1>
-                    <p className="text-slate-500 text-xs mt-1">* 이 페이지를 닫아도 데이터는 유지됩니다.</p>
+                    <p className="text-slate-500 text-s mt-1">*지형쌤 제작</p>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={openSettings} className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors" title="설정">
