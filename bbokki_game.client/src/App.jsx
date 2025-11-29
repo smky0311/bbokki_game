@@ -189,8 +189,8 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100 flex flex-col items-center py-8 px-4 font-sans select-none">
-            <div className="w-full max-w-4xl flex justify-between items-center mb-8 bg-white p-4 rounded-xl shadow-sm">
+        <div className="min-h-screen bg-slate-100 flex flex-col items-center py-4 px-2 sm:py-8 sm:px-4 font-sans select-none">
+            <div className="w-full max-w-[95vw] xl:max-w-7xl flex justify-between items-center mb-4 sm:mb-8 bg-white p-3 sm:p-4 rounded-xl shadow-sm">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
                         <IconSparkles className="text-yellow-500" /> 대박 기원 뽑기판
@@ -207,7 +207,7 @@ const App = () => {
                 </div>
             </div>
 
-            <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="w-full max-w-[95vw] xl:max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
                 {/* 왼쪽: 뽑기판 */}
                 <div className="lg:col-span-2">
                     <div className="bg-yellow-800 p-4 rounded-xl shadow-xl relative">
