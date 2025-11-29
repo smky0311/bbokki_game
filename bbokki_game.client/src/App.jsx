@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 // ---------------------------------------------------------
 // 아이콘 컴포넌트
 // ---------------------------------------------------------
-
-
 const IconTrophy = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></svg>
 );
@@ -36,7 +34,6 @@ const App = () => {
         { id: 5, rank: 5, name: "다음 기회에... (꽝)", weight: 49, total: 999, current: 999, color: "text-gray-400", iconType: 'frown' },
     ];
 
-    // 1. 칸 개수 상태 관리 (최대 200)
     const [totalSlots, setTotalSlots] = useState(() => {
         const saved = localStorage.getItem('bbokki_total_slots');
         return saved ? parseInt(saved, 10) : 50;
@@ -51,7 +48,6 @@ const App = () => {
         const saved = localStorage.getItem('bbokki_board');
         if (saved) return JSON.parse(saved);
 
-        // 저장된 보드가 없으면 현재 설정된 totalSlots 만큼 생성
         const initialSlots = localStorage.getItem('bbokki_total_slots')
             ? parseInt(localStorage.getItem('bbokki_total_slots'), 10)
             : 50;
@@ -73,7 +69,6 @@ const App = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-    // 설정 임시 저장용
     const [tempPrizes, setTempPrizes] = useState(JSON.parse(JSON.stringify(prizes)));
     const [tempTotalSlots, setTempTotalSlots] = useState(totalSlots);
 
@@ -83,7 +78,6 @@ const App = () => {
         localStorage.setItem('bbokki_history', JSON.stringify(history));
         localStorage.setItem('bbokki_total_slots', totalSlots.toString());
     }, [prizes, board, history, totalSlots]);
-
 
     const drawPrizeLogic = () => {
         const availablePrizes = prizes.filter(p => p.current > 0);
@@ -131,7 +125,6 @@ const App = () => {
         setPrizes(resetPrizes);
         setHistory([]);
 
-        // 현재 totalSlots 설정에 맞춰 재생성
         setBoard(Array.from({ length: totalSlots }, (_, i) => ({
             id: i,
             isOpen: false,
@@ -142,7 +135,7 @@ const App = () => {
 
     const openSettings = () => {
         setTempPrizes(JSON.parse(JSON.stringify(prizes)));
-        setTempTotalSlots(totalSlots); // 현재 설정된 칸 수 불러오기
+        setTempTotalSlots(totalSlots);
         setIsSettingsOpen(true);
     };
 
@@ -154,18 +147,15 @@ const App = () => {
 
     const saveSettings = () => {
         if (window.confirm("설정을 저장하면 게임판이 초기화됩니다. 진행하시겠습니까?")) {
-            // 1. 칸 수 유효성 검사 및 적용
             let newSlots = parseInt(tempTotalSlots, 10);
             if (isNaN(newSlots) || newSlots < 1) newSlots = 50;
-            if (newSlots > 200) newSlots = 200; // 최대 200개 제한
+            if (newSlots > 200) newSlots = 200;
 
             setTotalSlots(newSlots);
 
-            // 2. 상품 정보 적용
             const newPrizes = tempPrizes.map(p => ({ ...p, current: p.total }));
             setPrizes(newPrizes);
 
-            // 3. 게임판 및 기록 리셋
             setHistory([]);
             setBoard(Array.from({ length: newSlots }, (_, i) => ({
                 id: i,
@@ -192,16 +182,16 @@ const App = () => {
         <div className="min-h-screen bg-slate-100 flex flex-col items-center py-4 px-2 sm:py-8 sm:px-4 font-sans select-none">
             <div className="w-full max-w-[95vw] xl:max-w-7xl flex justify-between items-center mb-4 sm:mb-8 bg-white p-3 sm:p-4 rounded-xl shadow-sm">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                        <IconSparkles className="text-yellow-500" /> 대박 기원 뽑기판
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <IconSparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" /> 대박 기원 뽑기판
                     </h1>
                     <p className="text-slate-500 text-xs mt-1">* 이 페이지를 닫아도 데이터는 유지됩니다.</p>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={openSettings} className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors" title="설정">
-                        <IconSettings className="w-5 h-5" />
+                        <IconSettings className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
-                    <button onClick={resetGame} className="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors font-medium text-sm">
+                    <button onClick={resetGame} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors font-medium text-xs sm:text-sm">
                         <IconRefresh className="w-4 h-4" /> 초기화
                     </button>
                 </div>
@@ -210,17 +200,16 @@ const App = () => {
             <div className="w-full max-w-[95vw] xl:max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
                 {/* 왼쪽: 뽑기판 */}
                 <div className="lg:col-span-2">
-                    <div className="bg-yellow-800 p-4 rounded-xl shadow-xl relative">
+                    <div className="bg-yellow-800 p-3 sm:p-4 rounded-xl shadow-xl relative">
                         <div className="absolute inset-0 bg-yellow-900 opacity-10 rounded-xl pointer-events-none"></div>
-                        {/* 그리드: 칸이 많아질 경우를 대비해 lg 화면에서 grid-cols-10 추가 */}
-                        <div className="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-10 gap-2 relative z-10">
+                        <div className="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-10 gap-1 sm:gap-2 relative z-10">
                             {board.map((slot, index) => (
                                 <button
                                     key={slot.id}
                                     onClick={() => handleSlotClick(index)}
                                     disabled={slot.isOpen}
                                     className={`
-                    aspect-square relative rounded shadow-sm flex items-center justify-center text-xs font-bold transition-all duration-300
+                    aspect-square relative rounded shadow-sm flex items-center justify-center text-[10px] sm:text-xs font-bold transition-all duration-300
                     ${slot.isOpen
                                             ? 'bg-white border-2 border-slate-200 cursor-default'
                                             : 'bg-yellow-200 hover:bg-yellow-100 border-b-4 border-r-4 border-yellow-400 hover:scale-105 active:scale-95 cursor-pointer text-yellow-800'
@@ -242,16 +231,16 @@ const App = () => {
 
                 {/* 오른쪽: 현황 */}
                 <div className="flex flex-col gap-4">
-                    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
-                        <h2 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">남은 상품 현황</h2>
+                    <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100">
+                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2">남은 상품 현황</h2>
                         <ul className="space-y-3">
                             {prizes.map((prize) => (
-                                <li key={prize.id} className="flex justify-between items-center text-sm">
+                                <li key={prize.id} className="flex justify-between items-center text-xs sm:text-sm">
                                     <div className="flex items-center gap-2">
                                         <span className={`font-bold w-8 ${prize.color}`}>{prize.rank === 5 ? '꽝' : `${prize.rank}등`}</span>
-                                        <span className="text-slate-600 truncate max-w-[120px]">{prize.name}</span>
+                                        <span className="text-slate-600 truncate max-w-[120px] sm:max-w-[150px]">{prize.name}</span>
                                     </div>
-                                    <span className={`font-mono font-medium px-2 py-0.5 rounded ${prize.current === 0 ? 'bg-red-100 text-red-500' : 'bg-slate-100 text-slate-600'}`}>
+                                    <span className={`font-mono font-medium px-2 py-0.5 rounded text-xs ${prize.current === 0 ? 'bg-red-100 text-red-500' : 'bg-slate-100 text-slate-600'}`}>
                                         {prize.rank === 5 ? '∞' : `${prize.current}개`}
                                     </span>
                                 </li>
@@ -259,18 +248,18 @@ const App = () => {
                         </ul>
                     </div>
 
-                    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex-1">
-                        <h2 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">나의 당첨 기록</h2>
+                    <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100 flex-1">
+                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2">나의 당첨 기록</h2>
                         <div className="h-48 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                             {history.length === 0 ? (
-                                <p className="text-slate-400 text-center text-sm py-4">기록이 없습니다.</p>
+                                <p className="text-slate-400 text-center text-xs sm:text-sm py-4">기록이 없습니다.</p>
                             ) : (
                                 history.map((record, idx) => (
-                                    <div key={idx} className="flex justify-between items-center text-sm p-2 bg-slate-50 rounded">
+                                    <div key={idx} className="flex justify-between items-center text-xs sm:text-sm p-2 bg-slate-50 rounded">
                                         <span className={record.rank <= 3 ? "font-bold text-red-500" : "text-slate-500"}>
                                             {record.rank === 5 ? '꽝' : `${record.rank}등`}
                                         </span>
-                                        <span className="text-xs text-slate-400">{record.name}</span>
+                                        <span className="text-xs text-slate-400 truncate max-w-[150px]">{record.name}</span>
                                     </div>
                                 ))
                             )}
@@ -281,17 +270,17 @@ const App = () => {
 
             {isModalOpen && selectedPrize && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsModalOpen(false)}>
-                    <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center transform scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center transform scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
                         <div className="mb-6 flex justify-center">
-                            {renderIcon(selectedPrize.iconType, `w-16 h-16 ${selectedPrize.color}`)}
+                            {renderIcon(selectedPrize.iconType, `w-12 h-12 sm:w-16 sm:h-16 ${selectedPrize.color}`)}
                         </div>
-                        <h2 className={`text-3xl font-black mb-2 ${selectedPrize.rank === 5 ? 'text-slate-600' : 'text-red-500'}`}>
+                        <h2 className={`text-2xl sm:text-3xl font-black mb-2 ${selectedPrize.rank === 5 ? 'text-slate-600' : 'text-red-500'}`}>
                             {selectedPrize.rank === 5 ? '아쉽네요!' : `축하합니다!`}
                         </h2>
-                        <p className="text-xl font-bold text-slate-800 mb-2">
+                        <p className="text-lg sm:text-xl font-bold text-slate-800 mb-2">
                             {selectedPrize.rank === 5 ? '꽝' : `${selectedPrize.rank}등 당첨`}
                         </p>
-                        <p className="text-slate-500 mb-8 break-keep">{selectedPrize.name}</p>
+                        <p className="text-sm sm:text-base text-slate-500 mb-6 sm:mb-8 break-keep">{selectedPrize.name}</p>
                         <button onClick={() => setIsModalOpen(false)} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors">
                             확인
                         </button>
@@ -302,14 +291,13 @@ const App = () => {
             {/* 설정 모달 */}
             {isSettingsOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full transform scale-100 animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
-                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            <IconSettings className="w-6 h-6" /> 상품 및 확률 설정
+                    <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 max-w-lg w-full transform scale-100 animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
+                        <h2 className="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+                            <IconSettings className="w-5 h-5 sm:w-6 sm:h-6" /> 상품 및 확률 설정
                         </h2>
 
-                        {/* 칸 개수 설정 추가 */}
                         <div className="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                            <label className="block text-sm font-bold text-blue-800 mb-1">
+                            <label className="block text-xs sm:text-sm font-bold text-blue-800 mb-1">
                                 전체 뽑기판 칸 수 (최대 200개)
                             </label>
                             <div className="flex items-center gap-2">
@@ -319,9 +307,9 @@ const App = () => {
                                     max="200"
                                     value={tempTotalSlots}
                                     onChange={(e) => setTempTotalSlots(e.target.value)}
-                                    className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
-                                <span className="text-sm text-blue-600 whitespace-nowrap">개</span>
+                                <span className="text-xs sm:text-sm text-blue-600 whitespace-nowrap">개</span>
                             </div>
                             <p className="text-xs text-blue-500 mt-1">* 개수를 변경하면 판이 초기화됩니다.</p>
                         </div>
@@ -330,22 +318,22 @@ const App = () => {
                             <div className="space-y-4">
                                 {tempPrizes.map((prize) => (
                                     <div key={prize.id} className="p-3 border rounded-lg bg-slate-50">
-                                        <div className="flex items-center gap-2 mb-2 font-bold text-sm">
+                                        <div className="flex items-center gap-2 mb-2 font-bold text-xs sm:text-sm">
                                             <span className={prize.color}>{prize.rank === 5 ? '꽝' : `${prize.rank}등`}</span>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             <div>
                                                 <label className="block text-xs text-slate-500 mb-1">상품명</label>
-                                                <input type="text" value={prize.name} onChange={(e) => handleSettingChange(prize.id, 'name', e.target.value)} className="w-full border rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                                                <input type="text" value={prize.name} onChange={(e) => handleSettingChange(prize.id, 'name', e.target.value)} className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                                             </div>
                                             <div className="flex gap-2">
                                                 <div className="flex-1">
                                                     <label className="block text-xs text-slate-500 mb-1">전체 수량</label>
-                                                    <input type="number" disabled={prize.rank === 5} value={prize.total} onChange={(e) => handleSettingChange(prize.id, 'total', e.target.value)} className="w-full border rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-slate-200" />
+                                                    <input type="number" disabled={prize.rank === 5} value={prize.total} onChange={(e) => handleSettingChange(prize.id, 'total', e.target.value)} className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-slate-200" />
                                                 </div>
                                                 <div className="flex-1">
                                                     <label className="block text-xs text-slate-500 mb-1">당첨 가중치</label>
-                                                    <input type="number" value={prize.weight} onChange={(e) => handleSettingChange(prize.id, 'weight', e.target.value)} className="w-full border rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                                                    <input type="number" value={prize.weight} onChange={(e) => handleSettingChange(prize.id, 'weight', e.target.value)} className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                                                 </div>
                                             </div>
                                         </div>
@@ -354,8 +342,8 @@ const App = () => {
                             </div>
                         </div>
                         <div className="pt-4 mt-4 border-t flex gap-3">
-                            <button onClick={() => setIsSettingsOpen(false)} className="flex-1 px-4 py-3 bg-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-300">취소</button>
-                            <button onClick={saveSettings} className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700">저장 후 리셋</button>
+                            <button onClick={() => setIsSettingsOpen(false)} className="flex-1 px-4 py-2 sm:py-3 bg-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-300 text-sm">취소</button>
+                            <button onClick={saveSettings} className="flex-1 px-4 py-2 sm:py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 text-sm">저장 후 리셋</button>
                         </div>
                     </div>
                 </div>
