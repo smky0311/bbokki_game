@@ -179,7 +179,555 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-amber-50 flex flex-col py-4 px-3 sm:py-6 sm:px-6 lg:px-8 font-sans select-none">
+        <div className="min-h-screen bg-gradient-to-br from-slate-100 viimport React, { useState, useEffect } from 'react';
+
+// ---------------------------------------------------------
+// 아이콘 컴포넌트
+// ---------------------------------------------------------
+const IconTrophy = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></svg>
+);
+    const IconGift = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="8" width="18" height="4" rx="1" /><path d="M12 8v13" /><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" /><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.9 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5" /></svg>
+    );
+    const IconStar = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+    );
+    const IconSparkles = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M9 5H5" /><path d="M19 19v2" /><path d="M21 20h-2" /></svg>
+    );
+    const IconFrown = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10" /><path d="M16 16s-1.5-2-4-2-4 2-4 2" /><line x1="9" x2="9.01" y1="9" y2="9" /><line x1="15" x2="15.01" y1="9" y2="9" /></svg>
+    );
+    const IconRefresh = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg>
+    );
+    const IconSettings = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>
+    );
+    const IconPlus = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+    );
+    const IconTrash = ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
+    );
+
+    // 등수별 색상 배열 (1등~10등 + 꽝)
+    const RANK_COLORS = [
+        "text-yellow-500",  // 1등
+        "text-blue-500",    // 2등
+        "text-green-500",   // 3등
+        "text-orange-500",  // 4등
+        "text-purple-500",  // 5등
+        "text-pink-500",    // 6등
+        "text-cyan-500",    // 7등
+        "text-indigo-500",  // 8등
+        "text-rose-500",    // 9등
+        "text-teal-500",    // 10등
+        "text-gray-400",    // 꽝
+    ];
+
+    // 등수별 아이콘 타입
+    const RANK_ICONS = ['trophy', 'gift', 'star', 'sparkle', 'gift', 'star', 'sparkle', 'gift', 'star', 'sparkle', 'frown'];
+
+    const App = () => {
+        const DEFAULT_PRIZES = [
+            { id: 1, rank: 1, name: "황금 열쇠 (순금 1돈)", weight: 1, total: 1, current: 1, color: RANK_COLORS[0], iconType: RANK_ICONS[0], isBlank: false },
+            { id: 2, rank: 2, name: "최신형 무선 헤드셋", weight: 5, total: 3, current: 3, color: RANK_COLORS[1], iconType: RANK_ICONS[1], isBlank: false },
+            { id: 3, rank: 3, name: "편의점 상품권 1만원", weight: 15, total: 10, current: 10, color: RANK_COLORS[2], iconType: RANK_ICONS[2], isBlank: false },
+            { id: 4, rank: 4, name: "추억의 불량식품 세트", weight: 30, total: 20, current: 20, color: RANK_COLORS[3], iconType: RANK_ICONS[3], isBlank: false },
+            { id: 999, rank: 999, name: "다음 기회에... (꽝)", weight: 49, total: 999, current: 999, color: RANK_COLORS[10], iconType: 'frown', isBlank: true },
+        ];
+
+        const [totalSlots, setTotalSlots] = useState(() => {
+            const saved = localStorage.getItem('bbokki_total_slots');
+            return saved ? parseInt(saved, 10) : 50;
+        });
+
+        const [prizes, setPrizes] = useState(() => {
+            const saved = localStorage.getItem('bbokki_prizes');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // 기존 데이터 마이그레이션 - isBlank 필드 추가
+                return parsed.map(p => ({
+                    ...p,
+                    isBlank: p.isBlank !== undefined ? p.isBlank : (p.rank === 5 && p.name.includes('꽝')) || p.rank === 999
+                }));
+            }
+            return DEFAULT_PRIZES;
+        });
+
+        const [board, setBoard] = useState(() => {
+            const saved = localStorage.getItem('bbokki_board');
+            if (saved) return JSON.parse(saved);
+
+            const initialSlots = localStorage.getItem('bbokki_total_slots')
+                ? parseInt(localStorage.getItem('bbokki_total_slots'), 10)
+                : 50;
+
+            return Array.from({ length: initialSlots }, (_, i) => ({
+                id: i,
+                isOpen: false,
+                prizeData: null,
+                number: i + 1
+            }));
+        });
+
+        const [history, setHistory] = useState(() => {
+            const saved = localStorage.getItem('bbokki_history');
+            return saved ? JSON.parse(saved) : [];
+        });
+
+        const [selectedPrize, setSelectedPrize] = useState(null);
+        const [isModalOpen, setIsModalOpen] = useState(false);
+        const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+        const [tempPrizes, setTempPrizes] = useState(JSON.parse(JSON.stringify(prizes)));
+        const [tempTotalSlots, setTempTotalSlots] = useState(totalSlots);
+
+        useEffect(() => {
+            localStorage.setItem('bbokki_prizes', JSON.stringify(prizes));
+            localStorage.setItem('bbokki_board', JSON.stringify(board));
+            localStorage.setItem('bbokki_history', JSON.stringify(history));
+            localStorage.setItem('bbokki_total_slots', totalSlots.toString());
+        }, [prizes, board, history, totalSlots]);
+
+        const drawPrizeLogic = () => {
+            const availablePrizes = prizes.filter(p => p.current > 0);
+            const totalWeight = availablePrizes.reduce((acc, p) => acc + p.weight, 0);
+            let randomValue = Math.random() * totalWeight;
+
+            let winningPrize = null;
+            for (const prize of availablePrizes) {
+                randomValue -= prize.weight;
+                if (randomValue <= 0) {
+                    winningPrize = prize;
+                    break;
+                }
+            }
+
+            if (!winningPrize) winningPrize = prizes.find(p => p.isBlank);
+            return winningPrize;
+        };
+
+        const handleSlotClick = (index) => {
+            if (board[index].isOpen) return;
+
+            const result = drawPrizeLogic();
+
+            const newBoard = [...board];
+            newBoard[index] = { ...newBoard[index], isOpen: true, prizeData: result };
+            setBoard(newBoard);
+
+            const newPrizes = prizes.map(p =>
+                p.id === result.id ? { ...p, current: p.current - 1 } : p
+            );
+            setPrizes(newPrizes);
+
+            setTimeout(() => {
+                setSelectedPrize(result);
+                setIsModalOpen(true);
+                setHistory(prev => [result, ...prev]);
+            }, 400);
+        };
+
+        const resetGame = () => {
+            if (!window.confirm("정말 모든 데이터를 초기화하시겠습니까? 기록과 판이 모두 사라집니다.")) return;
+
+            const resetPrizes = prizes.map(p => ({ ...p, current: p.total }));
+            setPrizes(resetPrizes);
+            setHistory([]);
+
+            setBoard(Array.from({ length: totalSlots }, (_, i) => ({
+                id: i,
+                isOpen: false,
+                prizeData: null,
+                number: i + 1
+            })));
+        };
+
+        const openSettings = () => {
+            setTempPrizes(JSON.parse(JSON.stringify(prizes)));
+            setTempTotalSlots(totalSlots);
+            setIsSettingsOpen(true);
+        };
+
+        const handleSettingChange = (id, field, value) => {
+            setTempPrizes(prev => prev.map(p =>
+                p.id === id ? { ...p, [field]: field === 'total' || field === 'weight' ? Number(value) : value } : p
+            ));
+        };
+
+        // 상품 추가 (최대 10등까지)
+        const addPrize = () => {
+            const normalPrizes = tempPrizes.filter(p => !p.isBlank);
+            if (normalPrizes.length >= 10) {
+                alert("최대 10개의 상품만 등록할 수 있습니다.");
+                return;
+            }
+
+            const newRank = normalPrizes.length + 1;
+            const newPrize = {
+                id: Date.now(),
+                rank: newRank,
+                name: `${newRank}등 상품`,
+                weight: 10,
+                total: 5,
+                current: 5,
+                color: RANK_COLORS[newRank - 1] || RANK_COLORS[9],
+                iconType: RANK_ICONS[newRank - 1] || 'gift',
+                isBlank: false
+            };
+
+            // 꽝 앞에 삽입
+            const blankPrize = tempPrizes.find(p => p.isBlank);
+            const newPrizes = [...normalPrizes, newPrize];
+            if (blankPrize) newPrizes.push(blankPrize);
+
+            setTempPrizes(newPrizes);
+        };
+
+        // 상품 삭제 (꽝은 삭제 불가, 최소 1개 유지)
+        const removePrize = (id) => {
+            const prize = tempPrizes.find(p => p.id === id);
+            if (prize?.isBlank) return;
+
+            const normalPrizes = tempPrizes.filter(p => !p.isBlank);
+            if (normalPrizes.length <= 1) {
+                alert("최소 1개의 상품이 필요합니다.");
+                return;
+            }
+
+            // 삭제 후 rank 재정렬
+            const filtered = tempPrizes.filter(p => p.id !== id);
+            const reranked = filtered.map((p, idx) => {
+                if (p.isBlank) return p;
+                const newRank = filtered.filter(fp => !fp.isBlank).indexOf(p) + 1;
+                return {
+                    ...p,
+                    rank: newRank,
+                    color: RANK_COLORS[newRank - 1] || RANK_COLORS[9],
+                    iconType: RANK_ICONS[newRank - 1] || 'gift'
+                };
+            });
+
+            setTempPrizes(reranked);
+        };
+
+        const saveSettings = () => {
+            if (window.confirm("설정을 저장하면 게임판이 초기화됩니다. 진행하시겠습니까?")) {
+                let newSlots = parseInt(tempTotalSlots, 10);
+                if (isNaN(newSlots) || newSlots < 1) newSlots = 50;
+                if (newSlots > 200) newSlots = 200;
+
+                setTotalSlots(newSlots);
+
+                const newPrizes = tempPrizes.map(p => ({ ...p, current: p.total }));
+                setPrizes(newPrizes);
+
+                setHistory([]);
+                setBoard(Array.from({ length: newSlots }, (_, i) => ({
+                    id: i,
+                    isOpen: false,
+                    prizeData: null,
+                    number: i + 1
+                })));
+
+                setIsSettingsOpen(false);
+            }
+        };
+
+        const renderIcon = (type, className) => {
+            switch (type) {
+                case 'trophy': return <IconTrophy className={className} />;
+                case 'gift': return <IconGift className={className} />;
+                case 'star': return <IconStar className={className} />;
+                case 'sparkle': return <IconSparkles className={className} />;
+                default: return <IconFrown className={className} />;
+            }
+        };
+
+        // 꽝이 아닌 상품 수
+        const normalPrizeCount = tempPrizes.filter(p => !p.isBlank).length;
+
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-amber-50 flex flex-col py-4 px-3 sm:py-6 sm:px-6 lg:px-8 font-sans select-none">
+                {/* 헤더 */}
+                <div className="w-full flex justify-between items-center mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-100">
+                    <div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                            <IconSparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" /> 주님앞에 달란트 뽑기판
+                        </h1>
+                        <p className="text-slate-500 text-s mt-1">* 지형쌤 제작.</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <button onClick={openSettings} className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors" title="설정">
+                            <IconSettings className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </button>
+                        <button onClick={resetGame} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors font-medium text-xs sm:text-sm">
+                            <IconRefresh className="w-4 h-4" /> 초기화
+                        </button>
+                    </div>
+                </div>
+
+                {/* 메인 컨텐츠 - 전체 너비 사용 */}
+                <div className="w-full flex-1 grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
+                    {/* 왼쪽: 뽑기판 - 넓은 화면에서 3칸 차지 */}
+                    <div className="xl:col-span-3">
+                        <div className="bg-gradient-to-br from-yellow-700 to-yellow-900 p-3 sm:p-5 rounded-xl shadow-xl relative h-full">
+                            <div className="absolute inset-0 bg-yellow-900 opacity-10 rounded-xl pointer-events-none"></div>
+                            {/* 그리드 컬럼 수를 화면 크기에 따라 더 세밀하게 조정 */}
+                            <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-12 2xl:grid-cols-15 gap-1.5 sm:gap-2 relative z-10">
+                                {board.map((slot, index) => (
+                                    <button
+                                        key={slot.id}
+                                        onClick={() => handleSlotClick(index)}
+                                        disabled={slot.isOpen}
+                                        className={`
+                    aspect-square relative rounded-lg shadow-md flex items-center justify-center text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300
+                    ${slot.isOpen
+                                                ? 'bg-white border-2 border-slate-200 cursor-default'
+                                                : 'bg-gradient-to-br from-yellow-200 to-yellow-300 hover:from-yellow-100 hover:to-yellow-200 border-b-4 border-r-4 border-yellow-500 hover:scale-105 active:scale-95 cursor-pointer text-yellow-800 shadow-lg'
+                                            }
+                  `}
+                                    >
+                                        {slot.isOpen ? (
+                                            <span className={`text-center leading-tight ${slot.prizeData?.isBlank ? 'text-slate-400' : 'text-red-500 font-extrabold'}`}>
+                                                {slot.prizeData?.isBlank ? '꽝' : `${slot.prizeData?.rank}등`}
+                                            </span>
+                                        ) : (
+                                            <span className="opacity-60">{slot.number}</span>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 오른쪽: 현황 패널 */}
+                    <div className="xl:col-span-1 flex flex-col gap-4">
+                        {/* 남은 상품 현황 */}
+                        <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100">
+                            <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2 flex items-center gap-2">
+                                <IconGift className="w-4 h-4 text-amber-500" />
+                                남은 상품 현황
+                            </h2>
+                            <ul className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
+                                {prizes.map((prize) => (
+                                    <li key={prize.id} className="flex justify-between items-center text-xs sm:text-sm">
+                                        <div className="flex items-center gap-2">
+                                            <span className={`font-bold w-8 ${prize.color}`}>{prize.isBlank ? '꽝' : `${prize.rank}등`}</span>
+                                            <span className="text-slate-600 truncate max-w-[100px] sm:max-w-[140px] lg:max-w-[180px]">{prize.name}</span>
+                                        </div>
+                                        <span className={`font-mono font-medium px-2 py-0.5 rounded text-xs ${prize.current === 0 ? 'bg-red-100 text-red-500' : 'bg-slate-100 text-slate-600'}`}>
+                                            {prize.isBlank ? '∞' : `${prize.current}개`}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* 나의 당첨 기록 */}
+                        <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100 flex-1 min-h-[200px]">
+                            <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2 flex items-center gap-2">
+                                <IconTrophy className="w-4 h-4 text-amber-500" />
+                                나의 당첨 기록
+                            </h2>
+                            <div className="h-48 xl:h-auto xl:max-h-[300px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                                {history.length === 0 ? (
+                                    <p className="text-slate-400 text-center text-xs sm:text-sm py-4">기록이 없습니다.</p>
+                                ) : (
+                                    history.map((record, idx) => (
+                                        <div key={idx} className="flex justify-between items-center text-xs sm:text-sm p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                                            <span className={!record.isBlank ? "font-bold text-red-500" : "text-slate-500"}>
+                                                {record.isBlank ? '꽝' : `${record.rank}등`}
+                                            </span>
+                                            <span className="text-xs text-slate-400 truncate max-w-[120px] sm:max-w-[150px]">{record.name}</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* 통계 카드 추가 - 여백 활용 */}
+                        <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-4 sm:p-5 rounded-xl shadow-sm border border-amber-100">
+                            <h2 className="font-bold text-base sm:text-lg mb-3 text-slate-800 flex items-center gap-2">
+                                <IconStar className="w-4 h-4 text-amber-500" />
+                                진행 현황
+                            </h2>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="bg-white/70 rounded-lg p-3 text-center">
+                                    <div className="text-2xl font-bold text-amber-600">
+                                        {board.filter(s => s.isOpen).length}
+                                    </div>
+                                    <div className="text-xs text-slate-500">뽑은 횟수</div>
+                                </div>
+                                <div className="bg-white/70 rounded-lg p-3 text-center">
+                                    <div className="text-2xl font-bold text-green-600">
+                                        {board.filter(s => !s.isOpen).length}
+                                    </div>
+                                    <div className="text-xs text-slate-500">남은 칸</div>
+                                </div>
+                                <div className="bg-white/70 rounded-lg p-3 text-center col-span-2">
+                                    <div className="text-2xl font-bold text-red-500">
+                                        {history.filter(h => !h.isBlank).length}
+                                    </div>
+                                    <div className="text-xs text-slate-500">당첨 횟수 (꽝 제외)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 당첨 결과 모달 */}
+                {isModalOpen && selectedPrize && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsModalOpen(false)}>
+                        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center transform scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+                            <div className="mb-6 flex justify-center">
+                                {renderIcon(selectedPrize.iconType, `w-12 h-12 sm:w-16 sm:h-16 ${selectedPrize.color}`)}
+                            </div>
+                            <h2 className={`text-2xl sm:text-3xl font-black mb-2 ${selectedPrize.isBlank ? 'text-slate-600' : 'text-red-500'}`}>
+                                {selectedPrize.isBlank ? '아쉽네요!' : `축하합니다!`}
+                            </h2>
+                            <p className="text-lg sm:text-xl font-bold text-slate-800 mb-2">
+                                {selectedPrize.isBlank ? '꽝' : `${selectedPrize.rank}등 당첨`}
+                            </p>
+                            <p className="text-sm sm:text-base text-slate-500 mb-6 sm:mb-8 break-keep">{selectedPrize.name}</p>
+                            <button onClick={() => setIsModalOpen(false)} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors">
+                                확인
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* 설정 모달 */}
+                {isSettingsOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 max-w-2xl w-full transform scale-100 animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
+                            <h2 className="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+                                <IconSettings className="w-5 h-5 sm:w-6 sm:h-6" /> 상품 및 확률 설정
+                            </h2>
+
+                            <div className="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                                <label className="block text-xs sm:text-sm font-bold text-blue-800 mb-1">
+                                    전체 뽑기판 칸 수 (최대 200개)
+                                </label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="200"
+                                        value={tempTotalSlots}
+                                        onChange={(e) => setTempTotalSlots(e.target.value)}
+                                        className="w-full border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    />
+                                    <span className="text-xs sm:text-sm text-blue-600 whitespace-nowrap">개</span>
+                                </div>
+                                <p className="text-xs text-blue-500 mt-1">* 개수를 변경하면 판이 초기화됩니다.</p>
+                            </div>
+
+                            {/* 상품 추가 버튼 */}
+                            <div className="flex justify-between items-center mb-3">
+                                <span className="text-sm font-medium text-slate-600">
+                                    상품 목록 ({normalPrizeCount}/10)
+                                </span>
+                                <button
+                                    onClick={addPrize}
+                                    disabled={normalPrizeCount >= 10}
+                                    className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-xs font-medium rounded-lg transition-colors"
+                                >
+                                    <IconPlus className="w-3 h-3" /> 상품 추가
+                                </button>
+                            </div>
+
+                            <div className="overflow-y-auto flex-1 pr-2">
+                                <div className="space-y-3">
+                                    {tempPrizes.map((prize) => (
+                                        <div key={prize.id} className={`p-3 border rounded-lg ${prize.isBlank ? 'bg-gray-50 border-gray-200' : 'bg-slate-50'}`}>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="flex items-center gap-2 font-bold text-xs sm:text-sm">
+                                                    <span className={prize.color}>{prize.isBlank ? '꽝' : `${prize.rank}등`}</span>
+                                                </div>
+                                                {!prize.isBlank && (
+                                                    <button
+                                                        onClick={() => removePrize(prize.id)}
+                                                        className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                                                        title="삭제"
+                                                    >
+                                                        <IconTrash className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                                <div className="sm:col-span-1">
+                                                    <label className="block text-xs text-slate-500 mb-1">상품명</label>
+                                                    <input
+                                                        type="text"
+                                                        value={prize.name}
+                                                        onChange={(e) => handleSettingChange(prize.id, 'name', e.target.value)}
+                                                        className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-slate-500 mb-1">전체 수량</label>
+                                                    <input
+                                                        type="number"
+                                                        disabled={prize.isBlank}
+                                                        value={prize.total}
+                                                        onChange={(e) => handleSettingChange(prize.id, 'total', e.target.value)}
+                                                        className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-slate-200"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-slate-500 mb-1">당첨 확률(%)</label>
+                                                    <input
+                                                        type="number"
+                                                        value={prize.weight}
+                                                        onChange={(e) => handleSettingChange(prize.id, 'weight', e.target.value)}
+                                                        className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="pt-4 mt-4 border-t flex gap-3">
+                                <button onClick={() => setIsSettingsOpen(false)} className="flex-1 px-4 py-2 sm:py-3 bg-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-300 text-sm">취소</button>
+                                <button onClick={saveSettings} className="flex-1 px-4 py-2 sm:py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 text-sm">저장 후 리셋</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Tailwind 15열 그리드 커스텀 스타일 */}
+                <style>{`
+        @media (min-width: 1536px) {
+          .grid-cols-15 {
+            grid-template-columns: repeat(15, minmax(0, 1fr));
+          }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      `}</style>
+            </div>
+        );
+    };
+
+    export default App;
+a-slate-50 to-amber-50 flex flex-col py-4 px-3 sm:py-6 sm:px-6 lg:px-8 font-sans select-none">
             {/* 헤더 */}
             <div className="w-full flex justify-between items-center mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-100">
                 <div>
@@ -372,7 +920,7 @@ const App = () => {
                                                     <input type="number" disabled={prize.rank === 5} value={prize.total} onChange={(e) => handleSettingChange(prize.id, 'total', e.target.value)} className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-slate-200" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <label className="block text-xs text-slate-500 mb-1">당첨 가중치</label>
+                                                    <label className="block text-xs text-slate-500 mb-1">당첨 확률(%)</label>
                                                     <input type="number" value={prize.weight} onChange={(e) => handleSettingChange(prize.id, 'weight', e.target.value)} className="w-full border rounded px-2 py-1.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                                                 </div>
                                             </div>
