@@ -15,7 +15,7 @@ const IconStar = ({ className }) => (
     <svg xmlnsXlink={SVG_NS} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
 );
 const IconSparkles = ({ className }) => (
-    <svg xmlnsXlink={SVG_NS} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M9 5H5" /><path d="M19 19v2" /><path d="M21 20h-2" /></svg>
+    <svg xmlnsXlink={SVG_NS} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M9 5H5" /><path d="M19 19v2" /><path d="M21 20h-2" /></svg>
 );
 const IconFrown = ({ className }) => (
     <svg xmlnsXlink={SVG_NS} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10" /><path d="M16 16s-1.5-2-4-2-4 2-4 2" /><line x1="9" x2="9.01" y1="9" y2="9" /><line x1="15" x2="15.01" y1="9" y2="9" /></svg>
@@ -36,18 +36,18 @@ const IconCheck = ({ className }) => (
     <svg xmlnsXlink={SVG_NS} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12" /></svg>
 );
 
-// 등수별 색상 배열 (1등~10등 + 꽝)
+// 등수별 색상 배열
 const RANK_COLORS = [
-    "text-yellow-500",  // 1등
-    "text-blue-500",    // 2등
-    "text-green-500",   // 3등
-    "text-orange-500",  // 4등
-    "text-purple-500",  // 5등
-    "text-pink-500",    // 6등
-    "text-cyan-500",    // 7등
-    "text-indigo-500",  // 8등
-    "text-rose-500",    // 9등
-    "text-teal-500",    // 10등
+    "text-yellow-600",  // 1등 (가독성을 위해 조금 더 진한 색)
+    "text-blue-600",    // 2등
+    "text-green-600",   // 3등
+    "text-orange-600",  // 4등
+    "text-purple-600",  // 5등
+    "text-pink-600",    // 6등
+    "text-cyan-600",    // 7등
+    "text-indigo-600",  // 8등
+    "text-rose-600",    // 9등
+    "text-teal-600",    // 10등
     "text-gray-400",    // 꽝
 ];
 
@@ -72,7 +72,6 @@ const App = () => {
         const saved = localStorage.getItem('bbokki_prizes');
         if (saved) {
             const parsed = JSON.parse(saved);
-            // 기존 데이터 마이그레이션 - isBlank 필드 추가
             return parsed.map(p => ({
                 ...p,
                 isBlank: p.isBlank !== undefined ? p.isBlank : (p.rank === 5 && p.name.includes('꽝')) || p.rank === 999
@@ -105,8 +104,6 @@ const App = () => {
     const [selectedPrize, setSelectedPrize] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-    // [추가] 확인 모달 관련 상태
     const [targetSlot, setTargetSlot] = useState(null);
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -138,16 +135,12 @@ const App = () => {
         return winningPrize;
     };
 
-    // [수정] 슬롯 클릭 시 확인 모달 띄우기
     const handleSlotClick = (index) => {
         if (board[index].isOpen) return;
-
-        // 뽑기 전 확인을 위해 타겟 설정 및 모달 오픈
         setTargetSlot(index);
         setIsConfirmOpen(true);
     };
 
-    // [추가] 실제 뽑기 실행 로직 (확인 버튼 클릭 시 실행)
     const confirmDraw = () => {
         if (targetSlot === null) return;
 
@@ -163,7 +156,6 @@ const App = () => {
         );
         setPrizes(newPrizes);
 
-        // 모달 닫기
         setIsConfirmOpen(false);
         setTargetSlot(null);
 
@@ -201,7 +193,6 @@ const App = () => {
         ));
     };
 
-    // 상품 추가 (최대 10등까지)
     const addPrize = () => {
         const normalPrizes = tempPrizes.filter(p => !p.isBlank);
         if (normalPrizes.length >= 10) {
@@ -222,7 +213,6 @@ const App = () => {
             isBlank: false
         };
 
-        // 꽝 앞에 삽입
         const blankPrize = tempPrizes.find(p => p.isBlank);
         const newPrizes = [...normalPrizes, newPrize];
         if (blankPrize) newPrizes.push(blankPrize);
@@ -230,7 +220,6 @@ const App = () => {
         setTempPrizes(newPrizes);
     };
 
-    // 상품 삭제 (꽝은 삭제 불가, 최소 1개 유지)
     const removePrize = (id) => {
         const prize = tempPrizes.find(p => p.id === id);
         if (prize?.isBlank) return;
@@ -241,7 +230,6 @@ const App = () => {
             return;
         }
 
-        // 삭제 후 rank 재정렬
         const filtered = tempPrizes.filter(p => p.id !== id);
         const reranked = filtered.map((p, idx) => {
             if (p.isBlank) return p;
@@ -290,18 +278,17 @@ const App = () => {
         }
     };
 
-    // 꽝이 아닌 상품 수
     const normalPrizeCount = tempPrizes.filter(p => !p.isBlank).length;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-amber-50 flex flex-col py-4 px-3 sm:py-6 sm:px-6 lg:px-8 font-sans select-none">
+        // 여백(padding)을 줄이고 w-full로 채움
+        <div className="min-h-screen w-full bg-gradient-to-br from-slate-100 via-slate-50 to-amber-50 flex flex-col p-2 sm:p-4 font-sans select-none">
             {/* 헤더 */}
-            <div className="w-full flex justify-between items-center mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-100">
+            <div className="w-full flex justify-between items-center mb-3 bg-white p-3 rounded-xl shadow-sm border border-slate-100">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
-                        <IconSparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" /> 달란트시장 뽑기판
+                        <IconSparkles className="text-yellow-500 w-5 h-5 sm:w-6 sm:h-6" /> 달란트 시장 뽑기판 by 지형쌤
                     </h1>
-                    <p className="text-slate-500 text-s mt-1">* 지형쌤 제작.</p>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={openSettings} className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors" title="설정">
@@ -313,14 +300,15 @@ const App = () => {
                 </div>
             </div>
 
-            {/* 메인 컨텐츠 - 전체 너비 사용 */}
-            <div className="w-full flex-1 grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
-                {/* 왼쪽: 뽑기판 - 넓은 화면에서 3칸 차지 */}
-                <div className="xl:col-span-3">
-                    <div className="bg-gradient-to-br from-yellow-700 to-yellow-900 p-3 sm:p-5 rounded-xl shadow-xl relative h-full">
+            {/* 메인 컨텐츠: 여백 없이 꽉 차게, 그리드 비율 조정 */}
+            <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4">
+                {/* 왼쪽: 뽑기판 (큰 화면에서 3칸 차지) */}
+                <div className="lg:col-span-3 h-full">
+                    <div className="bg-gradient-to-br from-yellow-700 to-yellow-900 p-3 rounded-xl shadow-xl relative h-full flex flex-col justify-center">
                         <div className="absolute inset-0 bg-yellow-900 opacity-10 rounded-xl pointer-events-none"></div>
-                        {/* 그리드 컬럼 수를 화면 크기에 따라 더 세밀하게 조정 */}
-                        <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-12 2xl:grid-cols-15 gap-1.5 sm:gap-2 relative z-10">
+
+                        {/* 그리드: 칸이 많아져도 꽉 차게 보임 */}
+                        <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-14 2xl:grid-cols-16 gap-1.5 sm:gap-2 relative z-10">
                             {board.map((slot, index) => (
                                 <button
                                     key={slot.id}
@@ -348,22 +336,30 @@ const App = () => {
                 </div>
 
                 {/* 오른쪽: 현황 패널 */}
-                <div className="xl:col-span-1 flex flex-col gap-4">
-                    {/* 남은 상품 현황 */}
-                    <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100">
-                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2 flex items-center gap-2">
-                            <IconGift className="w-4 h-4 text-amber-500" />
+                <div className="lg:col-span-1 flex flex-col gap-3 h-full overflow-hidden">
+                    {/* 남은 상품 현황 (디자인 강조: 폰트 키우고 진하게) */}
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex-1 flex flex-col min-h-0">
+                        <h2 className="font-bold text-lg sm:text-xl mb-4 text-slate-800 border-b pb-2 flex items-center gap-2">
+                            <IconGift className="w-5 h-5 text-amber-500" />
                             남은 상품 현황
                         </h2>
-                        <ul className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
+                        <ul className="space-y-3 overflow-y-auto custom-scrollbar pr-2 flex-1">
                             {prizes.map((prize) => (
-                                <li key={prize.id} className="flex justify-between items-center text-xs sm:text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <span className={`font-bold w-8 ${prize.color}`}>{prize.isBlank ? '꽝' : `${prize.rank}등`}</span>
-                                        <span className="text-slate-600 truncate max-w-[100px] sm:max-w-[140px] lg:max-w-[180px]">{prize.name}</span>
+                                <li key={prize.id} className="flex justify-between items-center text-sm sm:text-base">
+                                    <div className="flex items-center gap-3">
+                                        <span className={`font-black text-lg w-10 ${prize.color}`}>
+                                            {prize.isBlank ? '꽝' : `${prize.rank}등`}
+                                        </span>
+                                        <span className="text-slate-800 font-bold truncate max-w-[120px] sm:max-w-[160px] xl:max-w-[200px]">
+                                            {prize.name}
+                                        </span>
                                     </div>
-                                    <span className={`font-mono font-medium px-2 py-0.5 rounded text-xs ${prize.current === 0 ? 'bg-red-100 text-red-500' : 'bg-slate-100 text-slate-600'}`}>
-                                        {prize.isBlank ? '∞' : `${prize.current}개`}
+                                    {/* 개수 표시 크게 강조 */}
+                                    <span className={`font-black text-base sm:text-lg px-3 py-1 rounded-lg ${prize.current === 0
+                                            ? 'bg-red-100 text-red-600'
+                                            : 'bg-slate-100 text-slate-700'
+                                        }`}>
+                                        {prize.isBlank ? '∞' : `${prize.current}`}
                                     </span>
                                 </li>
                             ))}
@@ -371,58 +367,30 @@ const App = () => {
                     </div>
 
                     {/* 나의 당첨 기록 */}
-                    <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-100 flex-1 min-h-[200px]">
-                        <h2 className="font-bold text-base sm:text-lg mb-4 text-slate-800 border-b pb-2 flex items-center gap-2">
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 h-1/3 min-h-[150px] flex flex-col">
+                        <h2 className="font-bold text-base sm:text-lg mb-2 text-slate-800 border-b pb-2 flex items-center gap-2">
                             <IconTrophy className="w-4 h-4 text-amber-500" />
-                            나의 당첨 기록
+                            최근 당첨 기록
                         </h2>
-                        <div className="h-48 xl:h-auto xl:max-h-[300px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                        <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                             {history.length === 0 ? (
-                                <p className="text-slate-400 text-center text-xs sm:text-sm py-4">기록이 없습니다.</p>
+                                <p className="text-slate-400 text-center text-sm py-4">기록이 없습니다.</p>
                             ) : (
                                 history.map((record, idx) => (
-                                    <div key={idx} className="flex justify-between items-center text-xs sm:text-sm p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                                    <div key={idx} className="flex justify-between items-center text-sm p-2 bg-slate-50 rounded-lg">
                                         <span className={!record.isBlank ? "font-bold text-red-500" : "text-slate-500"}>
                                             {record.isBlank ? '꽝' : `${record.rank}등`}
                                         </span>
-                                        <span className="text-xs text-slate-400 truncate max-w-[120px] sm:max-w-[150px]">{record.name}</span>
+                                        <span className="text-slate-500 truncate max-w-[150px]">{record.name}</span>
                                     </div>
                                 ))
                             )}
                         </div>
                     </div>
-
-                    {/* 통계 카드 추가 - 여백 활용 */}
-                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-4 sm:p-5 rounded-xl shadow-sm border border-amber-100">
-                        <h2 className="font-bold text-base sm:text-lg mb-3 text-slate-800 flex items-center gap-2">
-                            <IconStar className="w-4 h-4 text-amber-500" />
-                            진행 현황
-                        </h2>
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="bg-white/70 rounded-lg p-3 text-center">
-                                <div className="text-2xl font-bold text-amber-600">
-                                    {board.filter(s => s.isOpen).length}
-                                </div>
-                                <div className="text-xs text-slate-500">뽑은 횟수</div>
-                            </div>
-                            <div className="bg-white/70 rounded-lg p-3 text-center">
-                                <div className="text-2xl font-bold text-green-600">
-                                    {board.filter(s => !s.isOpen).length}
-                                </div>
-                                <div className="text-xs text-slate-500">남은 칸</div>
-                            </div>
-                            <div className="bg-white/70 rounded-lg p-3 text-center col-span-2">
-                                <div className="text-2xl font-bold text-red-500">
-                                    {history.filter(h => !h.isBlank).length}
-                                </div>
-                                <div className="text-xs text-slate-500">당첨 횟수 (꽝 제외)</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            {/* [추가] 뽑기 전 확인 모달 */}
+            {/* 모달들 (기존과 동일) */}
             {isConfirmOpen && targetSlot !== null && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsConfirmOpen(false)}>
                     <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center transform scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
@@ -447,7 +415,6 @@ const App = () => {
                 </div>
             )}
 
-            {/* 당첨 결과 모달 */}
             {isModalOpen && selectedPrize && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsModalOpen(false)}>
                     <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center transform scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
@@ -468,7 +435,6 @@ const App = () => {
                 </div>
             )}
 
-            {/* 설정 모달 */}
             {isSettingsOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 max-w-2xl w-full transform scale-100 animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[90vh]">
@@ -494,7 +460,6 @@ const App = () => {
                             <p className="text-xs text-blue-500 mt-1">* 개수를 변경하면 판이 초기화됩니다.</p>
                         </div>
 
-                        {/* 상품 추가 버튼 */}
                         <div className="flex justify-between items-center mb-3">
                             <span className="text-sm font-medium text-slate-600">
                                 상품 목록 ({normalPrizeCount}/10)
@@ -568,12 +533,13 @@ const App = () => {
                 </div>
             )}
 
-            {/* Tailwind 15열 그리드 커스텀 스타일 */}
+            {/* Tailwind 그리드 스타일 */}
             <style>{`
         @media (min-width: 1536px) {
-          .grid-cols-15 {
-            grid-template-columns: repeat(15, minmax(0, 1fr));
-          }
+          .grid-cols-16 { grid-template-columns: repeat(16, minmax(0, 1fr)); }
+        }
+        @media (min-width: 1280px) {
+          .grid-cols-14 { grid-template-columns: repeat(14, minmax(0, 1fr)); }
         }
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
