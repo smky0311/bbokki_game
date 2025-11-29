@@ -32,6 +32,9 @@ const IconPlus = ({ className }) => (
 const IconTrash = ({ className }) => (
     <svg xmlnsXlink={SVG_NS} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
 );
+const IconCheck = ({ className }) => (
+    <svg xmlnsXlink={SVG_NS} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12" /></svg>
+);
 
 // 등수별 색상 배열 (1등~10등 + 꽝)
 const RANK_COLORS = [
@@ -103,6 +106,10 @@ const App = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+    // [추가] 확인 모달 관련 상태
+    const [targetSlot, setTargetSlot] = useState(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
     const [tempPrizes, setTempPrizes] = useState(JSON.parse(JSON.stringify(prizes)));
     const [tempTotalSlots, setTempTotalSlots] = useState(totalSlots);
 
@@ -131,9 +138,20 @@ const App = () => {
         return winningPrize;
     };
 
+    // [수정] 슬롯 클릭 시 확인 모달 띄우기
     const handleSlotClick = (index) => {
         if (board[index].isOpen) return;
 
+        // 뽑기 전 확인을 위해 타겟 설정 및 모달 오픈
+        setTargetSlot(index);
+        setIsConfirmOpen(true);
+    };
+
+    // [추가] 실제 뽑기 실행 로직 (확인 버튼 클릭 시 실행)
+    const confirmDraw = () => {
+        if (targetSlot === null) return;
+
+        const index = targetSlot;
         const result = drawPrizeLogic();
 
         const newBoard = [...board];
@@ -144,6 +162,10 @@ const App = () => {
             p.id === result.id ? { ...p, current: p.current - 1 } : p
         );
         setPrizes(newPrizes);
+
+        // 모달 닫기
+        setIsConfirmOpen(false);
+        setTargetSlot(null);
 
         setTimeout(() => {
             setSelectedPrize(result);
@@ -399,6 +421,31 @@ const App = () => {
                     </div>
                 </div>
             </div>
+
+            {/* [추가] 뽑기 전 확인 모달 */}
+            {isConfirmOpen && targetSlot !== null && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsConfirmOpen(false)}>
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center transform scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+                        <div className="mb-6 bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-yellow-600">
+                            <span className="text-2xl font-black">{board[targetSlot].number}</span>
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-2">
+                            이 번호를 뽑으시겠습니까?
+                        </h2>
+                        <p className="text-slate-500 mb-8 break-keep text-sm">
+                            한번 뽑은 번호는 되돌릴 수 없습니다.<br />신중하게 결정해주세요!
+                        </p>
+                        <div className="flex gap-3">
+                            <button onClick={() => setIsConfirmOpen(false)} className="flex-1 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition-colors">
+                                취소
+                            </button>
+                            <button onClick={confirmDraw} className="flex-1 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                                <IconCheck className="w-5 h-5" /> 뽑기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* 당첨 결과 모달 */}
             {isModalOpen && selectedPrize && (
